@@ -1,4 +1,4 @@
-# dummy-jest-2
+# pin-pad
 
 ## Project setup
 ```
