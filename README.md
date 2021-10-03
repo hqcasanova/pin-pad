@@ -2,7 +2,7 @@
 
 Responsive pincode keypad with validation, locking state and support for touch hold events through [`vue3-touch-events`](https://github.com/robinrodricks/vue3-touch-events). Play around with the app [here](https://hqcasanova.github.io/pin-pad).
 
-The valid code is defined as an environment variable in the [`.env`](/pin-pad/blob/main/.env) file.
+The valid code is defined as an environment variable in the [`.env`](/.env) file.
 
 ## General description
 
