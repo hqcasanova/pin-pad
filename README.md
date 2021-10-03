@@ -2,6 +2,8 @@
 
 Responsive pincode keypad with validation, locking state and support for touch hold events through [`vue3-touch-events`](https://github.com/robinrodricks/vue3-touch-events). Play around with the app [here](https://hqcasanova.github.io/pin-pad).
 
+The valid code is defined as an environment variable in the [`.env`](/pin-pad/blob/main/.env) file.
+
 ## General description
 
 - The app has not been cross-browser tested properly, the bulk of development time being on Chrome. It may have some issues on old versions of mobile Safari and/or IE 11/early Edge. Support has been limited to all browser versions from 2016 onwards (see “.browserlistrc” under the project’s root folder), or when IE Edge started to comply with most web standards. The chosen baseline for mobile-first design was iPhone 5/SE. The app is responsive.
@@ -39,7 +41,7 @@ Responsive pincode keypad with validation, locking state and support for touch h
 
 - Git clone the project under a folder of your choice.
 - Assuming NPM is already installed, CD into the folder and execute the command `npm install`. This will get all the necessary dependencies off the web.
-- Once package install is complete, execute the command `ng serve —open`. This will compile the code and automatically bring up the web browser with interactive matcher’s page. Should the browser or the page not open, you can always do it manually and head to the URL http://localhost:4200.
+- Once package install is complete, execute the command `ng serve —open`. This will compile the code and automatically bring up the web browser with interactive matcher’s page. Should the browser or the page not open, you can always do it manually and head to the URL http://localhost:8080.
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
