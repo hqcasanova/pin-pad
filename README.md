@@ -41,7 +41,8 @@ The valid code is defined as an environment variable in the [`.env`](/.env) file
 
 - Git clone the project under a folder of your choice.
 - Assuming NPM is already installed, CD into the folder and execute the command `npm install`. This will get all the necessary dependencies off the web.
-- Once package install is complete, execute the command `ng serve —open`. This will compile the code and automatically bring up the web browser with interactive matcher’s page. Should the browser or the page not open, you can always do it manually and head to the URL http://localhost:8080.
+- Once package install is complete, execute the command `npm run serve`.
+- Open the browser and head to the URL http://localhost:8080.
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
