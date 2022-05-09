@@ -2,16 +2,25 @@ import { GetterTree } from 'vuex'
 import { State } from './state'
 
 export type Getters = {
-  isPinShort(state: State): boolean,
-  isLockFailCount(state: State): boolean,
-  isLastAttempt(state: State): boolean
+  isFail: (state: State) => boolean,
+  isSuccess: (state: State) => boolean,
+  isPinShort: (state: State) => boolean,
+  isLockFailCount: (state: State) => boolean,
+  isLastAttempt: (state: State) => boolean
 }
 
 export const getters: GetterTree<State, State> & Getters = {
+  isFail(state) { 
+    return state.failCount > 0;
+  },
+
+  isSuccess(state) {
+    return state.failCount === 0;
+  },
   
   // True if current code is not the required length for a valid PIN
   isPinShort(state) {
-    return state.code.length < state.maxLength;
+    return state.code.length < state.validLength;
   },
 
   // True if the number of consecutive PIN validation fails exceeds the locking threshold

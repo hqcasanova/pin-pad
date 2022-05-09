@@ -1,35 +1,25 @@
 <template>
-  <div class="pin-code" :class="{'loading': isLoading}">
-    <pin-char v-for="charPos in charPositions" 
-      :key="charPos"
-      :isVisible="charPos >= value.length - visibleFromLast" 
-      :value="value[charPos]" />
+  <div class="pin-string" :class="{'loading': isLoading}">
+    <template v-for="charPos in charPositions" :key="charPos">
+      <span class="pin-string__item">
+        <slot 
+          :pinPos="charPos"
+          :pinChar="value[charPos]" />
+      </span>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PinChar from '@/components/ui/PinChar.vue';
 
 export default defineComponent({
-  name: "PinCode",
-  
-  components: {
-    PinChar
-  },
+  name: "PinString",
 
   props: {
-
-    // Length of a valid PIN
-    reqLength: {
+    pinLength: {
       type: Number,
       required: true
-    },
-
-    // Number of characters from the right that remain visible
-    visibleFromLast: {
-      type: Number,
-      default: 0
     },
 
     value: {
@@ -45,7 +35,13 @@ export default defineComponent({
 
   computed: {
     charPositions() {
-      return [...Array(this.reqLength).keys()];
+      const positions = [];
+      let i = 0;
+
+      for (i; i < this.pinLength; i++) {
+        positions.push(i);
+      }
+      return positions;
     }
   }
 });
@@ -54,7 +50,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "@/scss/variables.scss";
 
-.pin-char {
+.pin-string__item {
+  display: inline-flex;
   vertical-align: middle;
   font-weight: bold;
 

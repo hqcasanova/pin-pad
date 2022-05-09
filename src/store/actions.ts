@@ -4,7 +4,9 @@ import { State } from "./state";
 import { validate } from "@/api";
 
 export enum ActionType {
-  ValidatePin = 'VALIDATE_PIN'
+  ValidatePin = 'VALIDATE_PIN',
+  UpdatePin = 'UPDATE_PIN',
+  ResetPin = 'RESET_PIN'
 }
 
 // Automatic detection of valid commit parameters thru mutation typing
@@ -16,22 +18,27 @@ type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
 }
 
 export type Actions = {
-  [ActionType.ValidatePin](context: ActionAugments): Promise<unknown>
+  [ActionType.ValidatePin]: (context: ActionAugments) => Promise<unknown>,
+  [ActionType.UpdatePin]: (context: ActionAugments, newValue: number | string) => void,
+  [ActionType.ResetPin]: (context: ActionAugments) => void
 }
 
 export const actions: ActionTree<State, State> & Actions = {
   async [ActionType.ValidatePin]({ state, commit }) {
-    let validated;
-
     try {
-      validated = await validate(state.code);
-      commit(MutationType.PinValid);
-      return validated;
-
+      await validate(state.code);
+      commit(MutationType.PinSuccess);
+     
     } catch (error) {
       commit(MutationType.PinFail);
     }
+  },
+
+  [ActionType.UpdatePin]({ commit }, newValue) {
+    commit(MutationType.pinUpdate, newValue.toString());
+  },
+
+  [ActionType.ResetPin]({ commit }) {
+    commit(MutationType.PinReset);
   }
 }
-
-

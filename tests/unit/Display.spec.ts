@@ -1,39 +1,90 @@
-import { store } from '@/store';
-import { validPin } from '@/api';
-import { actions, ActionType } from '@/store/actions';
-import { shallowMount, VueWrapper } from '@vue/test-utils';
+import { DOMWrapper, mount, VueWrapper } from '@vue/test-utils';
 import Display from '@/components/layout/Display.vue';
-import { MutationType } from '@/store/mutations';
-import { nextTick } from 'vue';
 
-describe('Key pad with automatic PIN reset on validation', () => {
-  let props: any, global: any, wrapper: VueWrapper<any>;
+describe('Display', () => {
+  
+  /* SETUP */
+  let wrapper: VueWrapper<any>;
+  let areas: DOMWrapper<Element>[];
+  let titleArea: DOMWrapper<Element> | undefined;
+  let feedbackArea: DOMWrapper<Element> | undefined;
+  let pinArea: DOMWrapper<Element> | undefined;
+  const code = '';
+  const validLength = 4;
+  const visibleFromLast = 1;
 
-  beforeAll(() => {
-    props = { isResetOnValidation: true };
-    global = { plugins: [store] };
-    wrapper = shallowMount(Display, { global });
-    store.commit(MutationType.PinReset);
+  const createWrapper = (deltaGetters: Object = {}) => {
+    const initGetters = { isFail: false, isSuccess: false, isLastAttempt: false };
+
+    wrapper = mount(Display, {
+      props: { code, validLength, visibleFromLast },
+      global: {
+        mocks: {
+          $store: { 
+            getters: { ...initGetters, ...deltaGetters }
+          }
+        }
+      }
+    });
+
+    areas = wrapper.findAll('.display-item');
+    titleArea = areas.find(item => item.element.classList.contains('display-title'));
+    feedbackArea = areas.find(item => item.element.classList.contains('display-feedback'));
+    pinArea = areas.find(item => item.element.classList.contains('display-pin'));
+  }
+
+  afterEach(() => {
+    wrapper.unmount();
+    jest.clearAllMocks();
   });
 
-  it('Once the PIN code is of required length, it is validated', async () => {
-    spyOn(actions, ActionType.ValidatePin);
+  /* TESTS */
+  it('renders the title and feedback areas with text and a pin area with the right content', () => {
+    createWrapper({ isFail: false, isSuccess: false });
+    expect(areas).toHaveLength(3);
+    expect(titleArea).toBeDefined();
+    expect(titleArea?.text()).not.toBe('');
+    expect(feedbackArea).toBeDefined();
+    expect(feedbackArea?.text()).not.toBe('');
+    expect(pinArea).toBeDefined();
+    expect(pinArea?.element.childElementCount).toBe(validLength);
+    expect(pinArea?.text()).toBe(code);
+  });
+
+  it('updates the pin area when the code changes, leaving the right positions visible', async () => {
+    const code = '123';
+    const visibleCode = code.slice(-visibleFromLast);
     
-    store.commit(MutationType.PinUpdate, validPin);
+    createWrapper();
+    await wrapper.setProps({ code });
 
-    // TODO: this should wait for DOM updates triggered by the state change above but it doesn't.
-    // As a consequence, the check for the action call happens earlier than the call itself.
-    await nextTick();
+    expect(pinArea).toBeDefined();
+    expect(pinArea?.text()).toMatch(visibleCode);
+  });
+
+  it('temporarily transitions the pin area into a loading state while validating', async () => {
+    createWrapper();
+    await wrapper.setProps({ isValidating: true });
+    expect(pinArea?.classes()).toContain('loading');
     
-    expect(actions[ActionType.ValidatePin]).toBeCalled();
+    await wrapper.setProps({ isValidating: false });
+    expect(pinArea?.classes()).not.toContain('loading');
   });
 
-  it('Once the PIN code has been validated, it has been reset', () => {    
+  it('shows the word "LOCKED" if the pin is wrong and locked', async () => {
+    createWrapper({ isFail: true });
+    await wrapper.setProps({ isPinLocked: true });
+    
+    expect(titleArea?.text()).toContain('LOCKED')
   });
 
-  it('If the validated PIN is valid, it shows the status as "OK"', () => { 
+  it('shows the word "ERROR" if the pin is wrong', async () => {
+    createWrapper({ isFail: true });
+    expect(titleArea?.text()).toContain('ERROR')
   });
 
-  it('If the validated PIN is invalid, it shows the status as "ERROR"', () => { 
+  it('shows the word "OK" if the pin is right', async () => {
+    createWrapper({ isSuccess: true });
+    expect(titleArea?.text()).toContain('OK');
   });
 });

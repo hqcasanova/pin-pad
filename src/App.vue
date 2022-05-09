@@ -1,6 +1,13 @@
 <template>
-  <display class="layout-item" />
-  <keypad class="layout-item" />
+  <display class="layout-item" 
+    :code="code" 
+    :validLength="validLength"
+    :isPinLocked="isPinLocked"
+    :isValidating="isValidating" />
+  
+  <keypad class="layout-item" 
+    :isDisabled="isPinLocked"
+    :isBlockInput="isValidating" />
 </template>
 
 <script lang="ts">
@@ -8,11 +15,40 @@ import { defineComponent } from 'vue';
 import Display from '@/components/layout/Display.vue';
 import Keypad from '@/components/layout/Keypad.vue';
 
+import { mapState } from 'vuex';
+import useValidation from '@/behaviours/useValidation';
+import useLock from '@/behaviours/useLock';
+
 export default defineComponent({
   name: 'App',
+  
   components: {
     Display,
     Keypad
+  },
+
+  props: {
+    isResetOnValidation: {
+      type: Boolean,
+      default: true
+    }
+  },
+
+  computed: {
+    ...mapState(['code', 'validLength'])
+  },
+
+  setup(props) {
+    const { validateOnLength, isValidating } = useValidation();
+    const { timerOnFailcount, isPinLocked } = useLock();
+
+    validateOnLength(props.isResetOnValidation);
+    timerOnFailcount();
+
+    return {
+      isPinLocked,
+      isValidating
+    }
   }
 });
 </script>

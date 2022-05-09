@@ -1,57 +1,61 @@
-import { store } from '@/store';
-import { actions, ActionType } from '@/store/actions';
-import { shallowMount, VueWrapper } from '@vue/test-utils';
+import { mount, VueWrapper } from '@vue/test-utils';
+import Vue3TouchEvents from 'vue3-touch-events';
+
 import Keypad from '@/components/layout/Keypad.vue';
-import { MutationType } from '@/store/mutations';
 
 describe('Key pad', () => {
-  let global: any, wrapper: VueWrapper<any>;
+  
+  /* SETUP */
+  let handler: jest.SpyInstance;
+  let wrapper: VueWrapper<any>;
+  const keyValues = [1, 2, 3];
 
-  beforeAll(() => {
-    global = { plugins: [store] };
-    wrapper = shallowMount(Keypad, { global });
+  const testInteraction = async (eventName: string, target: string = 'button') => {
+    const button = wrapper.find(target);
+    
+    await button.trigger(eventName);
+    return expect(handler);
+  };
+
+  beforeEach(() => {
+    wrapper = mount(Keypad, {
+      props: { keyValues },
+      global: { plugins: [Vue3TouchEvents] }
+    });
+    handler = jest.spyOn(wrapper.vm, 'pinUpdate');
   });
 
   afterEach(() => {
-    store.commit(MutationType.PinReset);;
-  });
-
-  afterAll(() => {
     wrapper.unmount();
+    jest.clearAllMocks();
   });
 
-  it('Each key press adds updates the PIN code until the required length is reached', () => {
-    let code = '';
-    let i = 0;
-
-    for (i; i < store.state.maxLength; i++) {
-      wrapper.vm.onKeyPressed(i);
-      code = `${code}${i}`;
-    }
-    expect(store.state.code).toMatch(code);
+  /* TESTS */
+  it('renders the keys passed in', () => {
+    expect(wrapper.text()).toMatch(keyValues.join(''));
   });
 
-  it('Key presses beyond the required PIN code length do not produce a longer PIN', () => {
-    let i = 0;
+  it('receives the number corresponding to the key the user interacted with', async () => {
+    await testInteraction('mouseup').then(expectation => {
+      expectation.toHaveBeenCalledWith(keyValues[0]);
+    });
+  });
 
-    for (i; i < store.state.maxLength + 1; i++) {
-      wrapper.vm.onKeyPressed(i);
-    }
+  it('prevents user interactions if isDisabled set to true', async () => {
+    await wrapper.setProps({ isDisabled: true });
     
-    expect(store.state.code.length).toBeLessThan(store.state.maxLength);
+    expect(wrapper.find('button').element.disabled).toBe(true);
+    await testInteraction('mouseup').then(expectation => {
+      expectation.not.toHaveBeenCalled();
+    });
   });
 
-  it('With number of key presses equal to required PIN length, PIN is reset on next keypress if not validating', () => {
-    let i = 0;
-
-    spyOn(actions, ActionType.ValidatePin);
-
-    for (i; i <= store.state.maxLength; i++) {
-      wrapper.vm.onKeyPressed(i);
-    }
-    expect(actions[ActionType.ValidatePin]).not.toHaveBeenCalled();
-    expect(store.state.code).toMatch('');
+  it('allows user interactions but ignores them if isBlockInput is set to true', async () => {
+    await wrapper.setProps({ isBlockInput: true });
+    
+    expect(wrapper.find('button').element.disabled).toBe(false);
+    await testInteraction('mouseup').then(expectation => {
+      expectation.not.toHaveBeenCalled();
+    });
   });
 });
-
-

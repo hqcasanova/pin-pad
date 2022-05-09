@@ -1,27 +1,26 @@
 import { useStore } from '@/store';
 import { computed } from 'vue';
-import { MutationType } from '@/store/mutations';
+import { ActionType } from '@/store/actions';
+
+const store = useStore();
+const isPinShort = computed(() => store.getters.isPinShort);
 
 type UseUpdate = {
-  pinUpdate: (value: string | number, isValidating: boolean) => void
+  pinUpdate: (value: string | number) => void
 }
 
 export default function (): UseUpdate {
-  const store = useStore();
-  const isPinShort = computed(() => store.getters.isPinShort);
   
   /**
-   * If a complete PIN had been validated, it clears the PIN on pressing the first key before
-   * changing the PIN code. Otherwise, it just does the latter.
+   * It clears the PIN on pressing the first key after PIN completion. 
+   * Otherwise, it changes the PIN accordingly.
    * @param value - Value keyed in.
-   * @param isValidating - True if the PIN code is still undergoing validation.
    */
-  function pinUpdate (value: string | number, isValidating: boolean) {
-    if (!isValidating && !isPinShort.value) {
-      store.commit(MutationType.PinReset);
-    }
-    if (isPinShort.value) {
-      store.commit(MutationType.PinUpdate, value);
+  function pinUpdate (value: string | number) {
+    if (!isPinShort.value) {
+      store.dispatch(ActionType.ResetPin);
+    } else {
+      store.dispatch(ActionType.UpdatePin, value);
     }
   }
 
