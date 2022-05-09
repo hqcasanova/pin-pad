@@ -52,7 +52,7 @@ export default defineComponent({
 
   mounted() {
     if (this.isGlobalKeyHandler) {
-      document.addEventListener('keydown', this.onValueKey);
+      document.addEventListener('keydown', this.onValueKey.bind(this));
     }
   },
 
@@ -92,14 +92,11 @@ export default defineComponent({
     /** 
      * Programatically clicks on the button after pressing precisely the keyboard key this component represents.
      * @param event - DOM event for keyboard stroke.
-     * @param [context=this] - Execution context for this handler. Set to this component by default.
      */
-    onValueKey(event: KeyboardEvent, context?: any) {
-      context = typeof context === 'undefined' ? this : context;
-
-      if (event.key === context.value.toString() && !context.$el.disabled) {
-        context.onRelease();
-        context.$el.focus();
+    onValueKey(event: KeyboardEvent) {
+      if (event.key === this.value.toString() && !this.$el.disabled) {
+        this.onRelease();
+        this.$el.focus();
       }
     }
   }

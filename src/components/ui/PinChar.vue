@@ -5,7 +5,7 @@
       'hide-border': isValue && isVisible,
       'faded': isDisabled
     }">
-    {{ value }}
+    {{ isVisible ? value : '' }}
   </span>
 </template>
 

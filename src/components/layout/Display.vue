@@ -29,64 +29,81 @@
 
       <template v-else-if="isSuccess">Your PIN is valid</template>
 
-      <template v-else>The code must be {{ maxLength }} characters long</template>
+      <template v-else>The code must be {{ validLength }} characters long</template>
     </p>
 
-    <pin-code class="display-pin display-item"
+    <pin-string class="display-pin display-item"
       :class="{'error': isFail && !isValidating}"
-      :reqLength="maxLength"
-      :visibleFromLast="pinShowLast"
-      :isLoading="isValidating"
+      :pinLength="validLength"
+      :isLoading="isValidating || isPinLocked"
       :value="code"
-    />
+      v-slot="slotProps">
+
+      <pin-char :isVisible="isCharVisible(slotProps.pinPos)" :value="slotProps.pinChar" />
+    </pin-string>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PinCode from '@/components/ui/PinCode.vue';
-import { mapGetters, mapState } from 'vuex';
+import PinString from '@/components/ui/PinString.vue';
+import PinChar from '@/components/ui/PinChar.vue';
+
+import { mapGetters } from 'vuex';
 import useValidation from '@/behaviours/useValidation';
 import useLock from '@/behaviours/useLock';
 
 export default defineComponent({
   name: 'Display',
+
   components: { 
-    PinCode
+    PinString,
+    PinChar
   },
 
   props: {
-    pinShowLast: {
+    code: {
+      type: String,
+      required: true
+    },
+    
+    validLength: {
       type: Number,
-      default: JSON.parse(process.env.VUE_APP_PIN_SHOW_LAST)
+      required: true
     },
 
-    isValidateOnLength: {
-      type: Boolean,
-      default: true
+    // Number of characters from the right that remain visible
+    visibleFromLast: {
+      type: Number,
+      default: JSON.parse(process.env.VUE_APP_PIN_SHOW_LAST) | 0
     },
 
-    isResetOnValidation: {
+    isPinLocked: {
       type: Boolean,
-      default: true
+      default: false
+    },
+
+    isValidating: {
+      type: Boolean,
+      default: false
     }
   },
 
   computed: {
-    ...mapState(['code', 'maxLength']),
-    ...mapGetters(['isLastAttempt'])
+    ...mapGetters(['isLastAttempt', 'isFail', 'isSuccess'])
   },
 
-  setup(props) {
-    const { isFail, isSuccess, isValidating } = useValidation(props.isValidateOnLength, props.isResetOnValidation);
-    const { paddedCountdown, isPinLocked } = useLock();
+  setup() {
+    const { paddedCountdown } = useLock();
 
     return {
       paddedCountdown,
-      isPinLocked,
-      isFail,
-      isSuccess,
-      isValidating
+    }
+  },
+
+  methods: {
+    isCharVisible(charPos: number) {
+      return charPos >= this.code.length - this.visibleFromLast;
     }
   }
 });
@@ -114,7 +131,7 @@ export default defineComponent({
     }
   }
 
-  .pin-code.error {
+  .pin-string.error {
     @include shake-animation($medium);
   }
 }

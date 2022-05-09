@@ -1,5 +1,4 @@
 import { useStore } from '@/store';
-import { MutationType } from '@/store/mutations';
 import { ActionType } from '@/store/actions';
 import {
   readonly,
@@ -8,42 +7,43 @@ import {
   watch  
 } from 'vue';
 
+const store = useStore();
 const isValidatingRef = ref<boolean>(false);
+const codeLength = computed(() => store.state.code.length);
 
-// Flexible typing to allow for mocking if necessary
 type UseValidation = {
-  isFail: ComputedRef<boolean> | boolean,
-  isSuccess: ComputedRef<boolean> | boolean,
+  validateOnLength: (isValidateOnLength: boolean) => void,
   isValidating: Ref<boolean> | boolean
 }
 
-export default function (isValidateOnLength= false, isResetOnValidation = false): UseValidation  {
-  const store = useStore();
-  const codeLength = computed(() => store.state.code.length);
+export default function (): UseValidation  {
 
   /**
-   * Triggers validation as soon as the PIN code is of the required length. If enabled,
-   * it also clears the code automatically, regardless of the validation result.
+   * Triggers validation and, if enabled, also clears the code automatically regardless of the validation result.
+   * @param {boolean} isResetOnValidation - True if the pin code si to be reset once validation is done.
    */
-  watch(codeLength, (length: number) => {
-    let validated;
+  const validate = (isResetOnValidation: boolean) => {
+    const validated = store.dispatch(ActionType.ValidatePin);    
+    
+    isValidatingRef.value = true;
+    validated.finally(() => {
+      if (isResetOnValidation) {
+        store.dispatch(ActionType.ResetPin);
+      }
+      isValidatingRef.value = false;
+    });
+  }
 
-    if (isValidateOnLength && length === store.state.maxLength) {
-      isValidatingRef.value = true;
-      validated = store.dispatch(ActionType.ValidatePin);
-      
-      validated.finally(() => {
-        if (isResetOnValidation) {
-          store.commit(MutationType.PinReset);
-        }
-        isValidatingRef.value = false;
-      });
-    }
-  });
+  const validateOnLength = (isResetOnValidation = false) => {
+    watch(codeLength, (length: number) => {
+      if (length === store.state.validLength) {
+        validate(isResetOnValidation);
+      }
+    });
+  }
 
   return {
-    isFail: computed(() => store.state.failCount > 0),
-    isSuccess: computed(() => store.state.isValid && !store.state.failCount),
+    validateOnLength,
     isValidating: readonly(isValidatingRef)
   }
 }

@@ -3,11 +3,11 @@
     <div v-for="keyValue in keyValues" class="key-item"
       :key="keyValue">
       <key-button class="primary-btn"
-        :disabled="isPinLocked" 
+        :disabled="isDisabled" 
         :value="keyValue"
-        :isCancelHold="isValidating"
+        :isCancelHold="isBlockInput"
         :isGlobalKeyHandler="true"
-        @key:pressed="onKeyPressed" />
+        @key:pressed="!isBlockInput && pinUpdate($event)" />
     </div>
   </div>
 </template>
@@ -15,9 +15,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import KeyButton from '@/components/ui/KeyButton.vue';
-import useLock from '@/behaviours/useLock';
+
 import useUpdate from '@/behaviours/useUpdate';
-import useValidation from '@/behaviours/useValidation';
 
 export default defineComponent({
   name: 'Keypad',
@@ -32,24 +31,24 @@ export default defineComponent({
       default() {
         return JSON.parse(process.env.VUE_APP_PIN_KEYS) as (string | number)[];
       }
+    },
+
+    isDisabled: {
+      type: Boolean,
+      default: false
+    },
+
+    isBlockInput: {
+      type: Boolean,
+      default: false
     }
   },
 
   setup() {
-    const { isPinLocked } = useLock();
-    const { isValidating } = useValidation();
     const { pinUpdate } = useUpdate();
 
     return {
-      isPinLocked,
-      isValidating,
       pinUpdate
-    }
-  },
-
-  methods: {
-    onKeyPressed(value: string | number) {
-      this.pinUpdate(value, this.isValidating as boolean);
     }
   }
 });
