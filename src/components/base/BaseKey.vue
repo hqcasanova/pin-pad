@@ -1,5 +1,5 @@
 <template>
-  <button class="key-btn" type="button"
+  <button class="base-key" type="button"
     @keydown.enter.space="onRelease"
     v-touch:hold="onHold"
     v-touch:release="onRelease">
@@ -11,7 +11,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'KeyButton',
+  name: 'BaseKey',
 
   props: {
     value: {
@@ -104,7 +104,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.key-btn {
+.base-key {
   padding: 0;
   width: 2.5em;
   min-width: 42px;

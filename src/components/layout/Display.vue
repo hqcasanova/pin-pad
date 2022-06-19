@@ -32,33 +32,34 @@
       <template v-else>The code must be {{ validLength }} characters long</template>
     </p>
 
-    <pin-string class="display-pin display-item"
-      :class="{'error': isFail && !isValidating}"
+    <pin-row class="display-pin display-item"
+      :class="{
+        'error': isFail && !isValidating,
+        'loading': isValidating || isPinLocked
+      }"
       :pinLength="validLength"
-      :isLoading="isValidating || isPinLocked"
       :value="code"
       v-slot="slotProps">
 
-      <pin-char :isVisible="isCharVisible(slotProps.pinPos)" :value="slotProps.pinChar" />
-    </pin-string>
+      <base-digit :isVisible="isCharVisible(slotProps.pinPos)" :value="slotProps.pinDigit" />
+    </pin-row>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PinString from '@/components/ui/PinString.vue';
-import PinChar from '@/components/ui/PinChar.vue';
+import PinRow from '@/components/structure/PinRow.vue';
+import BaseDigit from '@/components/base/BaseDigit.vue';
 
 import { mapGetters } from 'vuex';
-import useValidation from '@/behaviours/useValidation';
 import useLock from '@/behaviours/useLock';
 
 export default defineComponent({
   name: 'Display',
 
   components: { 
-    PinString,
-    PinChar
+    PinRow,
+    BaseDigit
   },
 
   props: {
@@ -121,8 +122,7 @@ export default defineComponent({
   }
 
   h2 {
-    font-family: "Bodoni MT", "Bodoni 72", Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif;
-    font-size: 1.7em;
+    font-size: 1.7rem;
     font-weight: 500;
     text-align: center;
 
@@ -131,8 +131,24 @@ export default defineComponent({
     }
   }
 
-  .pin-string.error {
-    @include shake-animation($medium);
+  .pin-row {
+    
+    &.error {
+      @include shake-animation($medium);
+    }
+    
+    .base-digit {
+      font-weight: 700;
+      transition: all $short linear;
+    }
+
+    &.loading .base-digit {
+      @include pulse-animation($long);
+
+      &:nth-child(even) {
+        animation-delay: $medium;
+      }
+    }
   }
 }
 </style>

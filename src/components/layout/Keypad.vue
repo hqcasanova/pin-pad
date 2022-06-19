@@ -2,7 +2,7 @@
   <div class="keypad-layout">
     <div v-for="keyValue in keyValues" class="key-item"
       :key="keyValue">
-      <key-button class="primary-btn"
+      <base-key class="primary-btn"
         :disabled="isDisabled" 
         :value="keyValue"
         :isCancelHold="isBlockInput"
@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import KeyButton from '@/components/ui/KeyButton.vue';
+import BaseKey from '@/components/base/BaseKey.vue';
 
 import useUpdate from '@/behaviours/useUpdate';
 
@@ -22,7 +22,7 @@ export default defineComponent({
   name: 'Keypad',
 
   components: {
-    KeyButton
+    BaseKey
   },
 
   props: {
