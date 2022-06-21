@@ -2,7 +2,9 @@
 $primary: #ffc419;
 $primary-text: #2d2d2d;
 $error: #f65959;
+$error-text: darken($error, 10%);
 $success: #58bf7e;
+$success-text: darken($success, 10%);
 $white: #fafafa;
 
 // Transition lengths

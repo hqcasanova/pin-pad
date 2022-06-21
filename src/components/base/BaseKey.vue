@@ -1,8 +1,11 @@
 <template>
-  <button class="base-key" type="button"
+  <button 
+    class="base-key"
+    type="button"
     @keydown.enter.space="onRelease"
     v-touch:hold="onHold"
-    v-touch:release="onRelease">
+    v-touch:release="onRelease"
+  >
     {{ value }}
   </button>
 </template>

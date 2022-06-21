@@ -1,19 +1,20 @@
 <template>
-  <display class="layout-item" 
+  <app-display 
     :code="code" 
     :validLength="validLength"
     :isPinLocked="isPinLocked"
-    :isValidating="isValidating" />
-  
-  <keypad class="layout-item" 
+    :isValidating="isValidating" 
+  />
+  <app-keypad
     :isDisabled="isPinLocked"
-    :isBlockInput="isValidating" />
+    :isBlockInput="isValidating" 
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Display from '@/components/layout/Display.vue';
-import Keypad from '@/components/layout/Keypad.vue';
+import AppDisplay from '@/components/AppDisplay.vue';
+import AppKeypad from '@/components/AppKeypad.vue';
 
 import { mapState } from 'vuex';
 import useValidation from '@/behaviours/useValidation';
@@ -23,8 +24,8 @@ export default defineComponent({
   name: 'App',
   
   components: {
-    Display,
-    Keypad
+    AppDisplay,
+    AppKeypad
   },
 
   props: {
@@ -85,15 +86,6 @@ button {
   }
 }
 
-/* CONVENIENCE CLASSES */
-.error-text {
-  color: darken($error, 10%);
-}
-
-.success-text {
-  color: darken($success, 10%);
-}
-
 /* LOADED STATE */
 .branding {
   .logo {
@@ -112,11 +104,11 @@ button {
   transform: scale(1);
   transition: all $long ease-in;
 
-  .display-layout {
+  .app-display {
     margin: 1em 0;
   }
   
-  .keypad-layout {
+  .app-keypad {
     max-width: 310px;
     margin-top: 1em;
   }
@@ -126,7 +118,7 @@ button {
     display: flex;
     align-items: center;
 
-    .display-layout {
+    .app-display {
       width: 17em;  // Prevents pushing keypad if headings change after validation
       margin-right: .5em;
     }

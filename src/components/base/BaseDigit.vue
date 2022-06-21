@@ -1,10 +1,12 @@
 <template>
-  <span class="base-digit"
+  <span 
+    class="base-digit"
     :class="{
-      'fill': isValue && !isVisible,
-      'hide-border': isValue && isVisible,
-      'faded': isDisabled
-    }">
+      'base-digit--filled': isValue && !isVisible,
+      'base-digit--borderless': isValue && isVisible,
+      'base-digit--faded': isDisabled
+    }"
+  >
     {{ isVisible ? value : '' }}
   </span>
 </template>
@@ -53,15 +55,15 @@ export default defineComponent({
   user-select: none;
   pointer-events: none;
 
-  &.fill {
+  &--filled {
     background: currentColor
   }
 
-  &.hide-border {
+  &--borderless {
     border-color: transparent;
   }
 
-  &.faded {
+  &--faded {
     opacity: 6;
   }
 }

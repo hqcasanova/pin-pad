@@ -1,7 +1,7 @@
 import { mount, VueWrapper } from '@vue/test-utils';
 import Vue3TouchEvents from 'vue3-touch-events';
 
-import Keypad from '@/components/layout/Keypad.vue';
+import AppKeypad from '@/components/layout/AppKeypad.vue';
 
 describe('Key pad', () => {
   
@@ -18,7 +18,7 @@ describe('Key pad', () => {
   };
 
   beforeEach(() => {
-    wrapper = mount(Keypad, {
+    wrapper = mount(AppKeypad, {
       props: { keyValues },
       global: { plugins: [Vue3TouchEvents] }
     });

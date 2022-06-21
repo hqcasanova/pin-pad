@@ -1,13 +1,18 @@
 <template>
-  <div class="keypad-layout">
-    <div v-for="keyValue in keyValues" class="key-item"
-      :key="keyValue">
-      <base-key class="primary-btn"
+  <div class="app-keypad">
+    <div 
+      v-for="keyValue in keyValues" 
+      class="app-keypad__item"
+      :key="keyValue"
+    >
+      <base-key 
+        class="primary-btn"
         :disabled="isDisabled" 
         :value="keyValue"
         :isCancelHold="isBlockInput"
         :isGlobalKeyHandler="true"
-        @key:pressed="!isBlockInput && pinUpdate($event)" />
+        @key:pressed="!isBlockInput && pinUpdate($event)" 
+      />
     </div>
   </div>
 </template>
@@ -19,7 +24,7 @@ import BaseKey from '@/components/base/BaseKey.vue';
 import useUpdate from '@/behaviours/useUpdate';
 
 export default defineComponent({
-  name: 'Keypad',
+  name: 'AppKeypad',
 
   components: {
     BaseKey
@@ -55,12 +60,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.keypad-layout {
+.app-keypad {
   display: flex;
   flex-wrap: wrap;
   margin: auto;
 
-  .key-item {
+  &__item {
     display: flex;
     align-items: center;
     justify-content: center;
