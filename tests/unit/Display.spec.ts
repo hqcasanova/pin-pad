@@ -1,5 +1,5 @@
 import { DOMWrapper, mount, VueWrapper } from '@vue/test-utils';
-import AppDisplay from '@/components/layout/TheDisplay.vue';
+import AppDisplay from '@/components/AppDisplay.vue';
 
 describe('Display', () => {
   
@@ -29,7 +29,7 @@ describe('Display', () => {
 
     areas = wrapper.findAll('.app-display__item');
     titleArea = areas.find(item => item.element.classList.contains('app-display__title'));
-    feedbackArea = areas.find(item => item.element.classList.contains('app-display__feeback'));
+    feedbackArea = areas.find(item => item.element.classList.contains('app-display__feedback'));
     pinArea = areas.find(item => item.element.classList.contains('app-display__pin'));;
   }
 
@@ -57,18 +57,16 @@ describe('Display', () => {
     
     createWrapper();
     await wrapper.setProps({ code });
-
-    expect(pinArea).toBeDefined();
     expect(pinArea?.text()).toMatch(visibleCode);
   });
 
   it('temporarily transitions the pin area into the loading state while validating', async () => {
     createWrapper();
     await wrapper.setProps({ isValidating: true });
-    expect(pinArea?.classes()).toContain('loading');
+    expect(pinArea?.classes()).toContain('app-display__pin--loading');
     
     await wrapper.setProps({ isValidating: false });
-    expect(pinArea?.classes()).not.toContain('loading');
+    expect(pinArea?.classes()).not.toContain('app-display__pin--loading');
   });
 
   it('shows the word "LOCKED" if the pin is wrong and locked', async () => {

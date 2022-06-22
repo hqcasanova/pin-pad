@@ -1,17 +1,17 @@
 <template>
   <div class="app-keypad">
-    <div 
-      v-for="keyValue in keyValues" 
+    <div
       class="app-keypad__item"
+      v-for="keyValue in keyValues"
       :key="keyValue"
     >
       <base-key 
         class="primary-btn"
         :disabled="isDisabled" 
         :value="keyValue"
-        :isCancelHold="isBlockInput"
-        :isGlobalKeyHandler="true"
-        @key:pressed="!isBlockInput && pinUpdate($event)" 
+        :is-cancel-hold="isInputBlocked"
+        :is-global-key-handler="true"
+        @key-pressed="!isInputBlocked && pinUpdate($event)" 
       />
     </div>
   </div>
@@ -43,7 +43,7 @@ export default defineComponent({
       default: false
     },
 
-    isBlockInput: {
+    isInputBlocked: {
       type: Boolean,
       default: false
     }

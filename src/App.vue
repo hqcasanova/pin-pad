@@ -1,13 +1,13 @@
 <template>
   <app-display 
     :code="code" 
-    :validLength="validLength"
-    :isPinLocked="isPinLocked"
-    :isValidating="isValidating" 
+    :valid-length="validLength"
+    :is-pin-locked="isPinLocked"
+    :is-validating="isValidating" 
   />
   <app-keypad
-    :isDisabled="isPinLocked"
-    :isBlockInput="isValidating" 
+    :is-disabled="isPinLocked"
+    :is-input-blocked="isValidating" 
   />
 </template>
 
@@ -88,7 +88,7 @@ button {
 
 /* LOADED STATE */
 .branding {
-  .logo {
+  &__logo {
     opacity: 1;
     animation: none;
   }

@@ -40,12 +40,12 @@
         'app-display__pin--error': isFail && !isValidating,
         'app-display__pin--loading': isValidating || isPinLocked
       }"
-      :pinLength="validLength"
+      :pin-length="validLength"
       :value="code"
       v-slot="slotProps"
     >
       <base-digit 
-        :isVisible="isCharVisible(slotProps.pinPos)" 
+        :is-visible="isCharVisible(slotProps.pinPos)" 
         :value="slotProps.pinDigit" 
       />
     </pin-row>

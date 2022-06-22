@@ -1,7 +1,7 @@
 import { mount, VueWrapper } from '@vue/test-utils';
 import Vue3TouchEvents from 'vue3-touch-events';
 
-import AppKeypad from '@/components/layout/AppKeypad.vue';
+import AppKeypad from '@/components/AppKeypad.vue';
 
 describe('Key pad', () => {
   
@@ -10,11 +10,11 @@ describe('Key pad', () => {
   let wrapper: VueWrapper<any>;
   const keyValues = [1, 2, 3];
 
-  const testInteraction = async (eventName: string, target: string = 'button') => {
+  const testInteraction = async (eventHandler: jest.SpyInstance, eventName: string = 'mouseup', target: string = 'button') => {
     const button = wrapper.find(target);
     
     await button.trigger(eventName);
-    return expect(handler);
+    return expect(eventHandler);
   };
 
   beforeEach(() => {
@@ -35,8 +35,8 @@ describe('Key pad', () => {
     expect(wrapper.text()).toMatch(keyValues.join(''));
   });
 
-  it('receives the number corresponding to the key the user interacted with', async () => {
-    await testInteraction('mouseup').then(expectation => {
+  it('receives the number corresponding to the first key of the keypad after clicking', async () => {
+    await testInteraction(handler).then(expectation => {
       expectation.toHaveBeenCalledWith(keyValues[0]);
     });
   });
@@ -45,16 +45,16 @@ describe('Key pad', () => {
     await wrapper.setProps({ isDisabled: true });
     
     expect(wrapper.find('button').element.disabled).toBe(true);
-    await testInteraction('mouseup').then(expectation => {
+    await testInteraction(handler).then(expectation => {
       expectation.not.toHaveBeenCalled();
     });
   });
 
-  it('allows user interactions but ignores them if isBlockInput is set to true', async () => {
-    await wrapper.setProps({ isBlockInput: true });
+  it('allows user interactions but ignores them if isInputBlocked is set to true', async () => {
+    await wrapper.setProps({ isInputBlocked: true });
     
     expect(wrapper.find('button').element.disabled).toBe(false);
-    await testInteraction('mouseup').then(expectation => {
+    await testInteraction(handler).then(expectation => {
       expectation.not.toHaveBeenCalled();
     });
   });

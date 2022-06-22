@@ -5,8 +5,8 @@
       :key="charPos"
     >
       <slot 
-        :pinPos="charPos"
-        :pinDigit="value[charPos]"
+        :pin-pos="charPos"
+        :pin-digit="value[charPos]"
       />
     </template>
   </div>

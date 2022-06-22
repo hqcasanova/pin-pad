@@ -31,7 +31,7 @@ export default defineComponent({
     // Name for the press event to be emitted
     pressEvent: {
       type: String,
-      default: 'key:pressed'
+      default: 'key-pressed'
     },
 
     // Used to cut off event streams on demand
