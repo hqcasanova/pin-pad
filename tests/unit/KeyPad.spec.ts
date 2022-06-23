@@ -10,11 +10,11 @@ describe('Key pad', () => {
   let wrapper: VueWrapper<any>;
   const keyValues = [1, 2, 3];
 
-  const testInteraction = async (eventHandler: jest.SpyInstance, eventName: string = 'mouseup', target: string = 'button') => {
-    const button = wrapper.find(target);
+  const testInteraction = async (eventName: string, target: string = 'button') => {
+    const targetEl = wrapper.find(target);
     
-    await button.trigger(eventName);
-    return expect(eventHandler);
+    await targetEl.trigger(eventName);
+    return expect(handler);
   };
 
   beforeEach(() => {
@@ -36,17 +36,25 @@ describe('Key pad', () => {
   });
 
   it('receives the number corresponding to the first key of the keypad after clicking', async () => {
-    await testInteraction(handler).then(expectation => {
-      expectation.toHaveBeenCalledWith(keyValues[0]);
+    await testInteraction('mouseup').then(expectedHandler => {
+      expectedHandler.toHaveBeenCalledWith(keyValues[0]);
     });
+  });
+
+  it('receives the number corresponding to the keyboard key pressed when global key handler enabled', async () => {
+    const keyEvent = new KeyboardEvent('keydown', { key: keyValues[0].toString() } );
+    await wrapper.setProps({ isGlobalKeyHandler: true });
+    
+    document.dispatchEvent(keyEvent);
+    expect(handler).toHaveBeenCalledWith(keyValues[0]);
   });
 
   it('prevents user interactions if isDisabled set to true', async () => {
     await wrapper.setProps({ isDisabled: true });
     
     expect(wrapper.find('button').element.disabled).toBe(true);
-    await testInteraction(handler).then(expectation => {
-      expectation.not.toHaveBeenCalled();
+    await testInteraction('mouseup').then(expectedHandler => {
+      expectedHandler.not.toHaveBeenCalled();
     });
   });
 
@@ -54,8 +62,8 @@ describe('Key pad', () => {
     await wrapper.setProps({ isInputBlocked: true });
     
     expect(wrapper.find('button').element.disabled).toBe(false);
-    await testInteraction(handler).then(expectation => {
-      expectation.not.toHaveBeenCalled();
+    await testInteraction('mouseup').then(expectedHandler => {
+      expectedHandler.not.toHaveBeenCalled();
     });
   });
 });
