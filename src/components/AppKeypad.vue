@@ -6,7 +6,7 @@
       :key="keyValue"
     >
       <base-key 
-        class="primary-btn"
+        class="btn btn--primary"
         :disabled="isDisabled" 
         :value="keyValue"
         :is-cancel-hold="isInputBlocked"
