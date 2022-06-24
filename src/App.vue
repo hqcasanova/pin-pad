@@ -118,7 +118,6 @@ body {
 #app {
   opacity: 1;
   max-height: 100vh;
-  transition: all $long ease-in;
 
   .app-display {
     margin: 1em 0;
