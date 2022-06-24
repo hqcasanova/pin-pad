@@ -1,10 +1,12 @@
 <template>
-  <span class="pin-char"
+  <span 
+    class="base-digit"
     :class="{
-      'fill': isValue && !isVisible,
-      'hide-border': isValue && isVisible,
-      'faded': isDisabled
-    }">
+      'base-digit--filled': isValue && !isVisible,
+      'base-digit--borderless': isValue && isVisible,
+      'base-digit--faded': isDisabled
+    }"
+  >
     {{ isVisible ? value : '' }}
   </span>
 </template>
@@ -13,7 +15,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "PinChar",
+  name: "BaseDigit",
 
   props: {
     value: {
@@ -40,31 +42,28 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-@import "@/scss/variables.scss";
-  
-.pin-char {
+<style lang="scss" scoped>  
+.base-digit {
   display: inline-flex;
   align-items: center; 
   justify-content: center;
   margin: .5em;
   width: 1em;
   height: 1em;
-  border: .15em solid $white;
+  border: .15em solid currentColor;
   border-radius: 50%;
-  transition: all $short linear;
   user-select: none;
   pointer-events: none;
 
-  &.fill {
-    background: $white;
+  &--filled {
+    background: currentColor
   }
 
-  &.hide-border {
+  &--borderless {
     border-color: transparent;
   }
 
-  &.faded {
+  &--faded {
     opacity: 6;
   }
 }

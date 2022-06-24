@@ -1,13 +1,15 @@
 <template>
-  <div class="display-layout">
-    <h2 class="display-title display-item">
+  <div class="app-display">
+    <h2 class="app-display__item app-display__title">
       <template v-if="isFail">
-        <strong class="display-status error-text">{{ isPinLocked ? 'LOCKED' : 'ERROR' }}</strong>
+        <strong class="app-display__status app-display__status--error">
+          {{ isPinLocked ? 'LOCKED' : 'ERROR' }}
+        </strong>
         {{ isPinLocked ? 'Keypad disabled' : 'Wrong PIN' }}
       </template>
 
       <template v-else-if="isSuccess">
-        <strong class="display-status success-text">OK</strong>
+        <strong class="app-display__status app-display__status--success">OK</strong>
         PIN verified
       </template>
 
@@ -16,7 +18,7 @@
       </template>
     </h2>
 
-    <p class="display-feedback display-item">
+    <p class="app-display__item app-display__feedback">
       <template v-if="isValidating">Checking...</template>
       
       <template v-else-if="isFail && !isPinLocked">
@@ -32,33 +34,38 @@
       <template v-else>The code must be {{ validLength }} characters long</template>
     </p>
 
-    <pin-string class="display-pin display-item"
-      :class="{'error': isFail && !isValidating}"
-      :pinLength="validLength"
-      :isLoading="isValidating || isPinLocked"
+    <pin-row 
+      class="app-display__item app-display__pin"
+      :class="{
+        'app-display__pin--error': isFail && !isValidating,
+        'app-display__pin--loading': isValidating || isPinLocked
+      }"
+      :pin-length="validLength"
       :value="code"
-      v-slot="slotProps">
-
-      <pin-char :isVisible="isCharVisible(slotProps.pinPos)" :value="slotProps.pinChar" />
-    </pin-string>
+      v-slot="slotProps"
+    >
+      <base-digit 
+        :is-visible="isCharVisible(slotProps.pinPos)" 
+        :value="slotProps.pinDigit" 
+      />
+    </pin-row>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PinString from '@/components/ui/PinString.vue';
-import PinChar from '@/components/ui/PinChar.vue';
+import PinRow from '@/components/structure/PinRow.vue';
+import BaseDigit from '@/components/base/BaseDigit.vue';
 
 import { mapGetters } from 'vuex';
-import useValidation from '@/behaviours/useValidation';
 import useLock from '@/behaviours/useLock';
 
 export default defineComponent({
-  name: 'Display',
+  name: 'AppDisplay',
 
   components: { 
-    PinString,
-    PinChar
+    PinRow,
+    BaseDigit
   },
 
   props: {
@@ -113,26 +120,48 @@ export default defineComponent({
 @import "@/scss/variables.scss";
 @import "@/scss/mixins.scss";
 
-.display-layout {
+.app-display {
   text-align: center;
 
-  .display-item {
+  &__item {
     margin: .5rem 0;
   }
+}
 
-  h2 {
-    font-family: "Bodoni MT", "Bodoni 72", Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif;
-    font-size: 1.7em;
-    font-weight: 500;
-    text-align: center;
+.app-display__title {
+  font-size: 1.7rem;
+  font-weight: 500;
+  text-align: center;
+}
 
-    strong {
-      font-weight: 700;
-    }
+.app-display__status {
+  font-weight: 700;
+
+  &--success {
+    color: $success-text;
   }
 
-  .pin-string.error {
+  &--error {
+    color: $error-text;
+  }
+}
+
+.app-display__pin {
+  &--error {
     @include shake-animation($medium);
+  }
+  
+  .base-digit {
+    font-weight: 700;
+    transition: all $short linear;
+  }
+
+  &--loading .base-digit {
+    @include pulse-animation($long);
+
+    &:nth-child(even) {
+      animation-delay: $medium;
+    }
   }
 }
 </style>

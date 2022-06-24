@@ -1,8 +1,11 @@
 <template>
-  <button class="key-btn" type="button"
+  <button 
+    class="base-key"
+    type="button"
     @keydown.enter.space="onRelease"
     v-touch:hold="onHold"
-    v-touch:release="onRelease">
+    v-touch:release="onRelease"
+  >
     {{ value }}
   </button>
 </template>
@@ -11,7 +14,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'KeyButton',
+  name: 'BaseKey',
 
   props: {
     value: {
@@ -28,7 +31,7 @@ export default defineComponent({
     // Name for the press event to be emitted
     pressEvent: {
       type: String,
-      default: 'key:pressed'
+      default: 'key-pressed'
     },
 
     // Used to cut off event streams on demand
@@ -104,7 +107,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.key-btn {
+.base-key {
   padding: 0;
   width: 2.5em;
   min-width: 42px;

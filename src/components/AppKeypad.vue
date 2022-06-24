@@ -1,28 +1,33 @@
 <template>
-  <div class="keypad-layout">
-    <div v-for="keyValue in keyValues" class="key-item"
-      :key="keyValue">
-      <key-button class="primary-btn"
+  <div class="app-keypad">
+    <div
+      class="app-keypad__item"
+      v-for="keyValue in keyValues"
+      :key="keyValue"
+    >
+      <base-key 
+        class="btn btn--primary"
         :disabled="isDisabled" 
         :value="keyValue"
-        :isCancelHold="isBlockInput"
-        :isGlobalKeyHandler="true"
-        @key:pressed="!isBlockInput && pinUpdate($event)" />
+        :is-cancel-hold="isInputBlocked"
+        :is-global-key-handler="true"
+        @key-pressed="!isInputBlocked && pinUpdate($event)" 
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import KeyButton from '@/components/ui/KeyButton.vue';
+import BaseKey from '@/components/base/BaseKey.vue';
 
 import useUpdate from '@/behaviours/useUpdate';
 
 export default defineComponent({
-  name: 'Keypad',
+  name: 'AppKeypad',
 
   components: {
-    KeyButton
+    BaseKey
   },
 
   props: {
@@ -38,7 +43,7 @@ export default defineComponent({
       default: false
     },
 
-    isBlockInput: {
+    isInputBlocked: {
       type: Boolean,
       default: false
     }
@@ -55,12 +60,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.keypad-layout {
+.app-keypad {
   display: flex;
   flex-wrap: wrap;
   margin: auto;
 
-  .key-item {
+  &__item {
     display: flex;
     align-items: center;
     justify-content: center;

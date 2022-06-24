@@ -1,19 +1,29 @@
 <template>
-  <display class="layout-item" 
+  <app-display 
     :code="code" 
-    :validLength="validLength"
-    :isPinLocked="isPinLocked"
-    :isValidating="isValidating" />
-  
-  <keypad class="layout-item" 
-    :isDisabled="isPinLocked"
-    :isBlockInput="isValidating" />
+    :valid-length="validLength"
+    :is-pin-locked="isPinLocked"
+    :is-validating="isValidating" 
+  />
+  <app-keypad
+    :is-disabled="isPinLocked"
+    :is-input-blocked="isValidating" 
+  />
+
+  <a 
+    class="link link--primary source-link"
+    rel="external" 
+    target="_blank" 
+    href="https://github.com/hqcasanova/pin-pad"
+  >
+    Source
+  </a>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Display from '@/components/layout/Display.vue';
-import Keypad from '@/components/layout/Keypad.vue';
+import AppDisplay from '@/components/AppDisplay.vue';
+import AppKeypad from '@/components/AppKeypad.vue';
 
 import { mapState } from 'vuex';
 import useValidation from '@/behaviours/useValidation';
@@ -23,8 +33,8 @@ export default defineComponent({
   name: 'App',
   
   components: {
-    Display,
-    Keypad
+    AppDisplay,
+    AppKeypad
   },
 
   props: {
@@ -57,46 +67,45 @@ export default defineComponent({
 @import "@/scss/variables.scss";
 @import "@/scss/mixins.scss";
 
+.source-link {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: block;
+  padding: .5em .7em;
+}
+
 /* GLOBAL DEFAULTS */
 body {
   color: $white;
 }
 
-a {
+.link {
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
   }
 
-  &.primary-link {
+  &--primary {
     color: $primary;
   }
 }
 
-button {
+.btn {
   border: none;
   cursor: pointer;
   transition: background-color $short ease-in;
 
-  &.primary-btn {
+  &--primary {
     @include app-button($primary);
     color: $primary-text;
   }
 }
 
-/* CONVENIENCE CLASSES */
-.error-text {
-  color: darken($error, 10%);
-}
-
-.success-text {
-  color: darken($success, 10%);
-}
-
 /* LOADED STATE */
 .branding {
-  .logo {
+  &__logo {
     opacity: 1;
     animation: none;
   }
@@ -109,14 +118,13 @@ button {
 #app {
   opacity: 1;
   max-height: 100vh;
-  transform: scale(1);
   transition: all $long ease-in;
 
-  .display-layout {
+  .app-display {
     margin: 1em 0;
   }
   
-  .keypad-layout {
+  .app-keypad {
     max-width: 310px;
     margin-top: 1em;
   }
@@ -126,7 +134,7 @@ button {
     display: flex;
     align-items: center;
 
-    .display-layout {
+    .app-display {
       width: 17em;  // Prevents pushing keypad if headings change after validation
       margin-right: .5em;
     }
