@@ -4,6 +4,8 @@ A **purposefully over-engineered** take on building a Vue3-based pin code pad to
 
 The valid code is defined as an environment variable in the [`.env`](/.env) file.
 
+A non-semantic styling version of the repo using Tailwind CSS is available on the [tailwind branch](https://github.com/hqcasanova/pin-pad/tree/tailwind).
+
 ## General description
 
 - The app’s behaviour details are inspired by this design: https://dribbble.com/shots/3295791--Wrong-PIN For example, the pin is cleared after validation, just as in the animation.
