@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .app-btn {
+    @apply text-center select-none outline-none disabled:pointer-events-none
+  }
+
+  .bg-primary-states {
+    @apply bg-primary hover:bg-light-primary focus:bg-dark-primary active:bg-dark-primary disabled:bg-darker-primary transition-colors
+  }
+
+  .min-mobile-dims {
+    min-width: 42px;
+    min-height: 42px;
+  }
+}

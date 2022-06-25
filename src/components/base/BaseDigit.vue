@@ -1,10 +1,11 @@
 <template>
   <span 
-    class="base-digit"
+    class="base-digit inline-flex items-center justify-center select-none pointer-events-none"
     :class="{
-      'base-digit--filled': isValue && !isVisible,
-      'base-digit--borderless': isValue && isVisible,
-      'base-digit--faded': isDisabled
+      'base-digit--hollow border-current border-solid': !isValue || !isVisible,
+      'base-digit--filled bg-current': isValue && !isVisible,
+      'base-digit--borderless border-transparent': isValue && isVisible,
+      'base-digit--faded opacity-60': isDisabled
     }"
   >
     {{ isVisible ? value : '' }}
@@ -41,30 +42,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss" scoped>  
-.base-digit {
-  display: inline-flex;
-  align-items: center; 
-  justify-content: center;
-  margin: .5em;
-  width: 1em;
-  height: 1em;
-  border: .15em solid currentColor;
-  border-radius: 50%;
-  user-select: none;
-  pointer-events: none;
-
-  &--filled {
-    background: currentColor
-  }
-
-  &--borderless {
-    border-color: transparent;
-  }
-
-  &--faded {
-    opacity: 6;
-  }
-}
-</style>

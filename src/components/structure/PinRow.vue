@@ -1,5 +1,5 @@
 <template>
-  <div class="pin-row">
+  <div class="pin-row inline-flex">
     <template 
       v-for="charPos in charPositions" 
       :key="charPos"
@@ -43,9 +43,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.pin-row {
-  display: inline-flex;
-}
-</style>

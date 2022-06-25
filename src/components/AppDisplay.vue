@@ -1,15 +1,15 @@
 <template>
-  <div class="app-display">
-    <h2 class="app-display__item app-display__title">
+  <div class="app-display text-center">
+    <h2 class="app-display__item app-display__title my-2 text-3xl font-medium">
       <template v-if="isFail">
-        <strong class="app-display__status app-display__status--error">
+        <strong class="app-display__status text-error">
           {{ isPinLocked ? 'LOCKED' : 'ERROR' }}
         </strong>
         {{ isPinLocked ? 'Keypad disabled' : 'Wrong PIN' }}
       </template>
 
       <template v-else-if="isSuccess">
-        <strong class="app-display__status app-display__status--success">OK</strong>
+        <strong class="app-display__status text-success">OK</strong>
         PIN verified
       </template>
 
@@ -18,7 +18,7 @@
       </template>
     </h2>
 
-    <p class="app-display__item app-display__feedback">
+    <p class="app-display__item app-display__feedback my-2">
       <template v-if="isValidating">Checking...</template>
       
       <template v-else-if="isFail && !isPinLocked">
@@ -35,22 +35,32 @@
     </p>
 
     <pin-row 
-      class="app-display__item app-display__pin"
+      class="app-display__item app-display__pin my-2"
       :class="{
-        'app-display__pin--error': isFail && !isValidating,
+        'app-display__pin--error animate-shake': isFail && !isValidating,
         'app-display__pin--loading': isValidating || isPinLocked
       }"
       :pin-length="validLength"
       :value="code"
       v-slot="slotProps"
     >
-      <base-digit 
+      <base-digit
+        class="m-2 w-4 h-4 font-bold border-2 transition-all rounded-full"
         :is-visible="isCharVisible(slotProps.pinPos)" 
         :value="slotProps.pinDigit" 
       />
     </pin-row>
   </div>
 </template>
+
+display: inline-flex;
+  align-items: center; 
+  justify-content: center;
+  margin: .5em;
+  width: 1em;
+  height: 1em;
+  border: .15em solid currentColor;
+  
 
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -116,52 +126,14 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-@import "@/scss/variables.scss";
-@import "@/scss/mixins.scss";
-
-.app-display {
-  text-align: center;
-
-  &__item {
-    margin: .5rem 0;
-  }
+<style scoped>
+.app-display__pin--loading .base-digit {
+  @apply animate-pulse
 }
 
-.app-display__title {
-  font-size: 1.7rem;
-  font-weight: 500;
-  text-align: center;
-}
-
-.app-display__status {
-  font-weight: 700;
-
-  &--success {
-    color: $success-text;
-  }
-
-  &--error {
-    color: $error-text;
-  }
-}
-
-.app-display__pin {
-  &--error {
-    @include shake-animation($medium);
-  }
-  
-  .base-digit {
-    font-weight: 700;
-    transition: all $short linear;
-  }
-
-  &--loading .base-digit {
-    @include pulse-animation($long);
-
-    &:nth-child(even) {
-      animation-delay: $medium;
-    }
-  }
+/* There is no animation-delay utility class in Tailwind v2 */
+/* It seems only native utility classes are customisable variant-wise in the tailwind.config.js file */
+.app-display__pin--loading .base-digit:nth-child(even) {
+  animation-delay: theme('transitionDuration.500');
 }
 </style>

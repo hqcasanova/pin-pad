@@ -1,12 +1,12 @@
 <template>
-  <div class="app-keypad">
+  <div class="app-keypad flex flex-wrap m-auto">
     <div
-      class="app-keypad__item"
+      class="app-keypad__item flex items-center justify-center flex-grow p-2 w-1/3"
       v-for="keyValue in keyValues"
       :key="keyValue"
     >
       <base-key 
-        class="btn btn--primary"
+        class="app-btn bg-primary-states text-black w-10 min-mobile-dims leading-10 rounded-full"
         :disabled="isDisabled" 
         :value="keyValue"
         :is-cancel-hold="isInputBlocked"
@@ -58,19 +58,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.app-keypad {
-  display: flex;
-  flex-wrap: wrap;
-  margin: auto;
-
-  &__item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1 0 33.3333%;
-    padding: .5em;
-  }
-}
-</style>

@@ -105,14 +105,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.base-key {
-  padding: 0;
-  width: 2.5em;
-  min-width: 42px;
-  min-height: 42px;
-  line-height: 2.5em;
-  border-radius: 50%;
-}
-</style>

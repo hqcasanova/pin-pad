@@ -1,17 +1,19 @@
 <template>
-  <app-display 
+  <app-display
+    class="my-4 landscape:w-64 landscape:mr-2"
     :code="code" 
     :valid-length="validLength"
     :is-pin-locked="isPinLocked"
     :is-validating="isValidating" 
   />
   <app-keypad
+    class="mt-4 max-w-xs"
     :is-disabled="isPinLocked"
     :is-input-blocked="isValidating" 
   />
 
   <a 
-    class="link link--primary source-link"
+    class="fixed bottom-0 right-0 block py-2 px-3 text-primary hover:underline"
     rel="external" 
     target="_blank" 
     href="https://github.com/hqcasanova/pin-pad"
@@ -59,83 +61,44 @@ export default defineComponent({
       isPinLocked,
       isValidating
     }
+  },
+
+  mounted() {
+    const appEl = document.body;
+    appEl?.classList.add('app--loaded');
   }
 });
 </script>
 
 <style lang="scss">
-@import "@/scss/variables.scss";
-@import "@/scss/mixins.scss";
+.app {
+  $this: &;
 
-.source-link {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  display: block;
-  padding: .5em .7em;
-}
+  /* Loaded state */
+  &--loaded {
+    color: theme('colors.white');
 
-/* GLOBAL DEFAULTS */
-body {
-  color: $white;
-}
+    #{$this}__branding {
+      color: theme('colors.white');;
+    }
 
-.link {
-  text-decoration: none;
+    #{$this}__logo {
+      opacity: 1;
+      animation: none;
+    }
 
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &--primary {
-    color: $primary;
-  }
-}
-
-.btn {
-  border: none;
-  cursor: pointer;
-  transition: background-color $short ease-in;
-
-  &--primary {
-    @include app-button($primary);
-    color: $primary-text;
-  }
-}
-
-/* LOADED STATE */
-.branding {
-  &__logo {
-    opacity: 1;
-    animation: none;
-  }
-  
-  body & {
-    color: $white;
-  }
-}
-
-#app {
-  opacity: 1;
-  max-height: 100vh;
-
-  .app-display {
-    margin: 1em 0;
-  }
-  
-  .app-keypad {
-    max-width: 310px;
-    margin-top: 1em;
+    #{$this}__container {
+      opacity: 1;
+      max-height: 100vh;
+      color: theme('colors.white');
+    }
   }
 
   /* Two-column landscape layout */
-  @media (orientation: landscape) {
-    display: flex;
-    align-items: center;
-
-    .app-display {
-      width: 17em;  // Prevents pushing keypad if headings change after validation
-      margin-right: .5em;
+  &__container {
+    @media (orientation: landscape) {
+      display: flex;
+      align-items: center;
     }
   }
 }
