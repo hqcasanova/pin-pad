@@ -1,4 +1,4 @@
-# PIN pad
+# PIN pad with Tailwind CSS
 
 A **purposefully over-engineered** take on building a Vue3-based pin code pad to learn how to unit test properly with Jest. Among other things, it's mobile-first, includes validation and supports touch hold events through [`vue3-touch-events`](https://github.com/robinrodricks/vue3-touch-events). Play around with the app [here](https://hqcasanova.github.io/pin-pad).
 
