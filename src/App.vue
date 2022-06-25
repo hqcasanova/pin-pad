@@ -59,6 +59,11 @@ export default defineComponent({
       isPinLocked,
       isValidating
     }
+  },
+
+  mounted() {
+    const appEl = document.querySelector('.app__container');
+    appEl?.classList.add('app__container--loaded');
   }
 });
 </script>
@@ -75,11 +80,7 @@ export default defineComponent({
   padding: .5em .7em;
 }
 
-/* GLOBAL DEFAULTS */
-body {
-  color: $white;
-}
-
+/* GLOBAL CLASSES */
 .link {
   text-decoration: none;
 
@@ -104,38 +105,44 @@ body {
 }
 
 /* LOADED STATE */
-.branding {
+.app {
+  color: $white;
+
+  &__branding {
+    color: $white;
+  }
+
   &__logo {
     opacity: 1;
     animation: none;
   }
-  
-  body & {
+
+  &__container {
+    opacity: 1;
     color: $white;
-  }
-}
 
-#app {
-  opacity: 1;
-  max-height: 100vh;
-
-  .app-display {
-    margin: 1em 0;
-  }
-  
-  .app-keypad {
-    max-width: 310px;
-    margin-top: 1em;
-  }
-
-  /* Two-column landscape layout */
-  @media (orientation: landscape) {
-    display: flex;
-    align-items: center;
+    &--loaded {
+      max-height: 100vh;
+    }
 
     .app-display {
-      width: 17em;  // Prevents pushing keypad if headings change after validation
-      margin-right: .5em;
+      margin: 1em 0;
+    }
+    
+    .app-keypad {
+      max-width: 310px;
+      margin-top: 1em;
+    }
+
+    /* Two-column landscape layout */
+    @media (orientation: landscape) {
+      display: flex;
+      align-items: center;
+
+      .app-display {
+        width: 17em;  // Prevents pushing keypad if headings change after validation
+        margin-right: .5em;
+      }
     }
   }
 }

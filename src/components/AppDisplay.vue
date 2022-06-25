@@ -131,7 +131,6 @@ export default defineComponent({
 .app-display__title {
   font-size: 1.7rem;
   font-weight: 500;
-  text-align: center;
 }
 
 .app-display__status {
