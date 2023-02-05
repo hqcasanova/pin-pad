@@ -11,35 +11,22 @@
   </span>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: "BaseDigit",
+export type Props = {
+  value?: string,
+  isVisible?: boolean,
+  isDisabled?: boolean
+}
 
-  props: {
-    value: {
-      type: String,
-      default: ''
-    },
-
-    isVisible: {
-      type: Boolean,
-      default: true
-    },
-
-    isDisabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  computed: {
-    isValue() {
-      return this.value.length;
-    }
-  }
+const props = withDefaults(defineProps<Props>(), {
+  value: '',
+  isVisible: true,
+  isDisabled: false   
 });
+
+const isValue = computed(() => props.value.length);
 </script>
 
 <style lang="scss" scoped>  

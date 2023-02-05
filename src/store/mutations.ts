@@ -2,22 +2,24 @@ import { MutationTree } from 'vuex';
 import { State } from "./state";
 
 export enum MutationType {
-  pinUpdate = 'PIN_UPDATE',
+  PinUpdate = 'PIN_UPDATE',
   PinSuccess = 'PIN_SUCCESS',
   PinFail = 'PIN_FAIL',
+  PinClear = 'PIN_CLEAR',
   PinReset = 'PIN_RESET'
 }
 
 export type Mutations = {
-  [MutationType.pinUpdate]: (state: State, code: string) => void,
+  [MutationType.PinUpdate]: (state: State, value: string) => void,
   [MutationType.PinSuccess]: (state: State) => void,
   [MutationType.PinFail]: (state: State) => void,
+  [MutationType.PinClear]: (state: State) => void,
   [MutationType.PinReset]: (state: State) => void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
-  [MutationType.pinUpdate](state, code) {
-    state.code = `${state.code}${code}`;
+  [MutationType.PinUpdate](state, value) {
+    state.code = `${state.code}${value}`;
   },
 
   [MutationType.PinSuccess](state) {
@@ -32,7 +34,12 @@ export const mutations: MutationTree<State> & Mutations = {
     }
   },
 
+  [MutationType.PinClear](state) {
+    state.code = '';
+  },
+
   [MutationType.PinReset](state) {
     state.code = '';
+    state.failCount = -1;
   }
 }
