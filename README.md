@@ -9,7 +9,7 @@ A non-semantic styling version of the repo using Tailwind CSS is available on th
 ## General description
 
 - The app’s behaviour details are inspired by this design: https://dribbble.com/shots/3295791--Wrong-PIN For example, the pin is cleared after validation, just as in the animation.
-- The present solution has been over-engineered on purpose to showcase the different avenues for segregation of business from presentation logic and, thus, potential for scalability and reuse. Things such as global state management and composables could easily have been done away with.
+- The present solution has been over-engineered on purpose to showcase the different avenues for the segregation of business from presentation logic and, thus, potential for scalability and reuse. Things such as global state management and composables could easily have been done away with.
 - The high-level architecture is the typical one for medium to large-sized apps:
     - API layer with PIN check (would-be request)
     - Vuex store with minimum logic related to PIN code’s value, static properties (e.g. maxLength) and states (e.g. isFail).
@@ -37,9 +37,10 @@ A non-semantic styling version of the repo using Tailwind CSS is available on th
 ## Instructions for local deployment
 
 - Git clone the project under a folder of your choice.
-- Assuming NPM is already installed, CD into the folder and execute the command `npm install`. This will get all the necessary dependencies off the web.
-- Once package install is complete, execute the command `npm run serve`.
+- Assuming NPM is already installed, `cd` into the folder and run `npm install`. This will get all the necessary dependencies off the web.
+- Once package install is complete, run the command `npm run serve`.
 - Open the browser and head to the URL http://localhost:8080.
+- For testing, use `npm run test:unit`.
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

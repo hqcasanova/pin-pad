@@ -20,51 +20,34 @@
   </a>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import AppDisplay from '@/components/AppDisplay.vue';
 import AppKeypad from '@/components/AppKeypad.vue';
 
-import { mapState } from 'vuex';
+import { useStore } from 'vuex';
 import useValidation from '@/behaviours/useValidation';
 import useLock from '@/behaviours/useLock';
+import { computed, onMounted } from 'vue';
 
-export default defineComponent({
-  name: 'App',
-  
-  components: {
-    AppDisplay,
-    AppKeypad
-  },
+export type Props = {
+  isResetOnTimeout?: boolean
+}
+const props = withDefaults(defineProps<Props>(), {
+  isResetOnTimeout: true
+});
 
-  props: {
-    isResetOnValidation: {
-      type: Boolean,
-      default: true
-    }
-  },
+const store = useStore();
+const { validateOnLength, isValidating } = useValidation();
+const { timerOnFailcount, isPinLocked } = useLock();
+const code = computed(() => store.state.code);
+const validLength = computed(() => store.state.validLength);
 
-  computed: {
-    ...mapState(['code', 'validLength'])
-  },
+validateOnLength();
+timerOnFailcount(props.isResetOnTimeout); 
 
-  setup(props) {
-    const { validateOnLength, isValidating } = useValidation();
-    const { timerOnFailcount, isPinLocked } = useLock();
-
-    validateOnLength(props.isResetOnValidation);
-    timerOnFailcount();
-
-    return {
-      isPinLocked,
-      isValidating
-    }
-  },
-
-  mounted() {
-    const appEl = document.querySelector('.app__container');
-    appEl?.classList.add('app__container--loaded');
-  }
+onMounted(() => {
+  const appEl = document.querySelector('.app__container');
+  appEl?.classList.add('app__container--loaded');
 });
 </script>
 
