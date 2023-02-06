@@ -12,34 +12,24 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: "PinRow",
+export type Props = {
+  pinLength: number,
+  value?: string
+}
+const props = withDefaults(defineProps<Props>(), {
+  value: ''
+});
 
-  props: {
-    pinLength: {
-      type: Number,
-      required: true
-    },
+const charPositions = computed(() => {
+  const positions = [];
+  let i = 0;
 
-    value: {
-      type: String,
-      default: ''
-    }
-  },
-
-  computed: {
-    charPositions() {
-      const positions = [];
-      let i = 0;
-
-      for (i; i < this.pinLength; i++) {
-        positions.push(i);
-      }
-      return positions;
-    }
+  for (i; i < props.pinLength; i++) {
+    positions.push(i);
   }
+  return positions;
 });
 </script>

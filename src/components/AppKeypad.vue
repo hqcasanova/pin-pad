@@ -17,44 +17,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import BaseKey from '@/components/base/BaseKey.vue';
-
 import useUpdate from '@/behaviours/useUpdate';
 
-export default defineComponent({
-  name: 'AppKeypad',
-
-  components: {
-    BaseKey
-  },
-
-  props: {
-    keyValues: {
-      type: Array,
-      default() {
-        return JSON.parse(process.env.VUE_APP_PIN_KEYS) as (string | number)[];
-      }
-    },
-
-    isDisabled: {
-      type: Boolean,
-      default: false
-    },
-
-    isInputBlocked: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  setup() {
-    const { pinUpdate } = useUpdate();
-
-    return {
-      pinUpdate
-    }
-  }
+export type Props = {
+  keyValues?: (string | number)[],
+  isDisabled?: boolean,
+  isInputBlocked?: boolean
+}
+const props = withDefaults(defineProps<Props>(), {
+  keyValues: () => JSON.parse(process.env.VUE_APP_PIN_KEYS),
+  isDisabled: false,
+  isInputBlocked: false
 });
+
+const { pinUpdate } = useUpdate();
 </script>

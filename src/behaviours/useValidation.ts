@@ -3,46 +3,41 @@ import { ActionType } from '@/store/actions';
 import {
   readonly,
   ref, Ref,
-  computed, 
-  watch  
+  computed, ComputedRef,
+  watch
 } from 'vue';
 
-const store = useStore();
 const isValidatingRef = ref<boolean>(false);
-const codeLength = computed(() => store.state.code.length);
 
 type UseValidation = {
-  validateOnLength: (isValidateOnLength: boolean) => void,
-  isValidating: Ref<boolean> | boolean
-}
+  codeLength: ComputedRef<number>,
+  validateOnLength: () => void,
+  isValidating: Ref<boolean>
+};
 
-export default function (): UseValidation  {
+export default function (store = useStore()): UseValidation  {
+  const codeLength = computed(() => store.state.code.length);
 
-  /**
-   * Triggers validation and, if enabled, also clears the code automatically regardless of the validation result.
-   * @param {boolean} isResetOnValidation - True if the pin code si to be reset once validation is done.
-   */
-  const validate = (isResetOnValidation: boolean) => {
+  const validate = () => {
     const validated = store.dispatch(ActionType.ValidatePin);    
     
     isValidatingRef.value = true;
     validated.finally(() => {
-      if (isResetOnValidation) {
-        store.dispatch(ActionType.ResetPin);
-      }
       isValidatingRef.value = false;
     });
   }
 
-  const validateOnLength = (isResetOnValidation = false) => {
+  // Optional watchers
+  const validateOnLength = () => {
     watch(codeLength, (length: number) => {
       if (length === store.state.validLength) {
-        validate(isResetOnValidation);
+        validate();
       }
     });
   }
 
   return {
+    codeLength,
     validateOnLength,
     isValidating: readonly(isValidatingRef)
   }

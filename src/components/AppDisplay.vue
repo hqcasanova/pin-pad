@@ -1,6 +1,8 @@
 <template>
   <div class="app-display text-center">
-    <h2 class="app-display__item app-display__title my-2 text-3xl font-medium">
+    <h2 
+      class="app-display__item app-display__title my-2 text-3xl font-medium"
+      test="display-item title">
       <template v-if="isFail">
         <strong class="app-display__status text-error">
           {{ isPinLocked ? 'LOCKED' : 'ERROR' }}
@@ -18,7 +20,10 @@
       </template>
     </h2>
 
-    <p class="app-display__item app-display__feedback my-2">
+    <p 
+      class="app-display__item app-display__feedback my-2"
+      test="display-item feedback"
+    >
       <template v-if="isValidating">Checking...</template>
       
       <template v-else-if="isFail && !isPinLocked">
@@ -29,20 +34,25 @@
         Please wait {{ paddedCountdown }} seconds
       </template>
 
-      <template v-else-if="isSuccess">Your PIN is valid</template>
+      <template v-else-if="isSuccess">
+        Your PIN is valid
+      </template>
 
-      <template v-else>The code must be {{ validLength }} characters long</template>
+      <template v-else>
+        The code must be {{ validLength }} characters long
+      </template>
     </p>
 
-    <pin-row 
+    <pin-row
+      v-slot="slotProps"
       class="app-display__item app-display__pin my-2"
       :class="{
         'app-display__pin--error animate-shake': isFail && !isValidating,
         'app-display__pin--loading': isValidating || isPinLocked
       }"
+      test="display-item pin"
       :pin-length="validLength"
       :value="code"
-      v-slot="slotProps"
     >
       <base-digit
         class="m-2 w-4 h-4 font-bold border-2 transition-all rounded-full"
@@ -53,77 +63,38 @@
   </div>
 </template>
 
-display: inline-flex;
-  align-items: center; 
-  justify-content: center;
-  margin: .5em;
-  width: 1em;
-  height: 1em;
-  border: .15em solid currentColor;
-  
-
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import PinRow from '@/components/structure/PinRow.vue';
 import BaseDigit from '@/components/base/BaseDigit.vue';
 
-import { mapGetters } from 'vuex';
+import { useStore } from 'vuex';
 import useLock from '@/behaviours/useLock';
+import { computed } from 'vue';
 
-export default defineComponent({
-  name: 'AppDisplay',
+export type Props = {
+  code: string,
+  validLength: number,
+  visibleFromLast?: number,
+  isPinLocked?: boolean,
+  isValidating?: boolean
+}
 
-  components: { 
-    PinRow,
-    BaseDigit
-  },
-
-  props: {
-    code: {
-      type: String,
-      required: true
-    },
-    
-    validLength: {
-      type: Number,
-      required: true
-    },
-
-    // Number of characters from the right that remain visible
-    visibleFromLast: {
-      type: Number,
-      default: JSON.parse(process.env.VUE_APP_PIN_SHOW_LAST) | 0
-    },
-
-    isPinLocked: {
-      type: Boolean,
-      default: false
-    },
-
-    isValidating: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  computed: {
-    ...mapGetters(['isLastAttempt', 'isFail', 'isSuccess'])
-  },
-
-  setup() {
-    const { paddedCountdown } = useLock();
-
-    return {
-      paddedCountdown,
-    }
-  },
-
-  methods: {
-    isCharVisible(charPos: number) {
-      return charPos >= this.code.length - this.visibleFromLast;
-    }
-  }
+const props = withDefaults(defineProps<Props>(), {
+  visibleFromLast: JSON.parse(process.env.VUE_APP_PIN_SHOW_LAST),
+  isPinLocked: false,
+  isValidating: false
 });
+
+const store = useStore();  
+const { paddedCountdown } = useLock();
+
+const isLastAttempt = computed(() => store.getters.isLastAttempt);
+const isFail = computed(() => store.getters.isFail);
+const isSuccess = computed(() => store.getters.isSuccess);
+
+function isCharVisible(charPos: number) {
+  return charPos >= props.code.length - (props.visibleFromLast || 0);
+}
 </script>
 
 <style scoped>
