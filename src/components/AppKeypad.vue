@@ -1,9 +1,9 @@
 <template>
   <div class="app-keypad flex flex-wrap m-auto">
     <div
-      class="app-keypad__item flex items-center justify-center flex-grow p-2 w-1/3"
       v-for="keyValue in keyValues"
       :key="keyValue"
+      class="app-keypad__item flex items-center justify-center flex-grow p-2 w-1/3"
     >
       <base-key 
         class="app-btn bg-primary-states text-black w-10 min-mobile-dims leading-10 rounded-full"

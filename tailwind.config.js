@@ -20,6 +20,22 @@ module.exports = {
         'text-black': '#2d2d2d'
       },
 
+      fontSize: {
+        '2-5xl': '1.7rem'
+      },
+
+      borderWidth: {
+        '3': '3px'
+      },
+
+      maxWidth: {
+        'xss': '15rem'
+      },
+
+      spacing: {
+        '68': '17rem'
+      },
+
       screens: {
         'landscape': {'raw': '(orientation: landscape)'}
       },

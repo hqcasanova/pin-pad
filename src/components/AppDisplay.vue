@@ -1,8 +1,9 @@
 <template>
   <div class="app-display text-center">
     <h2 
-      class="app-display__item app-display__title my-2 text-3xl font-medium"
-      test="display-item title">
+      class="text-2-5xl my-2 font-medium"
+      test="display-item title"
+    >
       <template v-if="isFail">
         <strong class="app-display__status text-error">
           {{ isPinLocked ? 'LOCKED' : 'ERROR' }}
@@ -21,10 +22,12 @@
     </h2>
 
     <p 
-      class="app-display__item app-display__feedback my-2"
+      class="my-2"
       test="display-item feedback"
     >
-      <template v-if="isValidating">Checking...</template>
+      <template v-if="isValidating">
+        Checking...
+      </template>
       
       <template v-else-if="isFail && !isPinLocked">
         {{ isLastAttempt ? 'Last try remaining' : 'Please try again' }}
@@ -45,7 +48,7 @@
 
     <pin-row
       v-slot="slotProps"
-      class="app-display__item app-display__pin my-2"
+      class="app-display__pin my-2"
       :class="{
         'app-display__pin--error animate-shake': isFail && !isValidating,
         'app-display__pin--loading': isValidating || isPinLocked
@@ -55,7 +58,7 @@
       :value="code"
     >
       <base-digit
-        class="m-2 w-4 h-4 font-bold border-2 transition-all rounded-full"
+        class="m-2 w-4 h-4 font-bold border-3 transition-all rounded-full"
         :is-visible="isCharVisible(slotProps.pinPos)" 
         :value="slotProps.pinDigit" 
       />

@@ -1,6 +1,5 @@
 import { mutations, MutationType } from '@/store/mutations';
 import { State, state } from '@/store/state';
-import { getCurrentInstance } from 'vue';
 
 let currState: State;
 

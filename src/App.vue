@@ -1,13 +1,13 @@
 <template>
   <app-display
-    class="my-4 landscape:w-64 landscape:mr-2"
+    class="my-4 landscape:w-68 landscape:mr-2"
     :code="code" 
     :valid-length="validLength"
     :is-pin-locked="isPinLocked"
     :is-validating="isValidating" 
   />
   <app-keypad
-    class="mt-4 max-w-xs"
+    class="mt-4 max-w-xss"
     :is-disabled="isPinLocked"
     :is-input-blocked="isValidating" 
   />
@@ -55,25 +55,24 @@ onMounted(() => {
 
 <style lang="scss">
 .app {
-  $this: &;
+  color: theme('colors.white');
 
-  /* Loaded state */
-  &--loaded {
+  &__branding {
+    color: theme('colors.white');;
+  }
+
+  &__logo {
+    opacity: 1;
+    animation: none;
+  }
+
+  &__container {
+    opacity: 1;
+    max-height: 100vh;
     color: theme('colors.white');
 
-    #{$this}__branding {
-      color: theme('colors.white');;
-    }
-
-    #{$this}__logo {
-      opacity: 1;
-      animation: none;
-    }
-
-    #{$this}__container {
-      opacity: 1;
+    &--loaded {
       max-height: 100vh;
-      color: theme('colors.white');
     }
   }
 

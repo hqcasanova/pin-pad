@@ -8,7 +8,7 @@
   }
 
   .bg-primary-states {
-    @apply bg-primary hover:bg-light-primary focus:bg-dark-primary active:bg-dark-primary disabled:bg-darker-primary transition-colors
+    @apply bg-primary hover:bg-light-primary focus:bg-dark-primary active:bg-dark-primary disabled:bg-darker-primary transition-colors duration-300
   }
 
   .min-mobile-dims {
